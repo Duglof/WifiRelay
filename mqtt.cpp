@@ -8,7 +8,7 @@
 //              Add mqttClient.setKeepAlive(MQTT_KeepAlive_Timeout);
 //              Add mqttClient.subscribe((String(topic) + "/set/#").c_str());
 //                to receive command like topic/set/#
-//                ex : Message arrived on topic CLIMATE : [CLIMATE/set/setmode], 2
+//                ex : Message arrived on topic CLIMATE : [WIFI-RELAY/set/setmode], 2
 // **********************************************************************************
 
 #include "WifiRelay.h"

@@ -58,9 +58,15 @@
 #define CFG_SYSLOG_HOST_SIZE    32
 
 // Default values
-// Port pour l'OTA
 #define CFG_DEFAULT_TZ            "CET-1CEST,M3.5.0,M10.5.0/3"
+
+// Port pour l'OTA
+#ifdef ESP8266
 #define CFG_DEFAULT_OTA_PORT      8266
+#else
+#define CFG_DEFAULT_OTA_PORT      3232
+#endif
+
 #define CFG_DEFAULT_OTA_AUTH      "OTA_WifiRel"
 //#define CFG_DEFAULT_OTA_AUTH    ""
 #define CFG_DEFAULT_SYSLOG_PORT   514
