@@ -142,39 +142,32 @@ Sous réserve de tests
 
 # Web interface
 
-## Etat du relay
+## Etat de WifiRelay
 
-### Français en °C celsius
-![Etat du thermostat Fr](docs/web-thermostat-state-fr.jpg)
-
-### Anglais en °F fahrenheit
-![Etat du thermostat en](docs/web-thermostat-state-en.jpg)
+![Etat du relais Fr](docs/web-relay-state-fr.jpg)
 
 ## Données du système
-![Données du système](docs/web-thermostat-system.png)
-
-## Programme de chauffage (28 plages)
-![Programme de chauufage](docs/web-thermostat-prog-heat.png)
+![Données du système](docs/web-relay-system.png)
 
 ## Configuration
 
 ### Wifi
-![Config Wifi](docs/web-thermostat-config-wifi-fr.png)
+![Config Wifi](docs/web-relay-config-wifi-fr.png)
 
 ### Relay
-![Config Relay](docs/web-thermostat-config-thermostat-fr.png)
+![Config Relay](docs/web-relay-config-relais-fr.png)
 
 ### Mqtt
-![Config Mqtt](docs/web-thermostat-config-mqtt-fr.png)
+![Config Mqtt](docs/web-relay-config-mqtt-fr.png)
 
 ### Jeedom
-![Config Jeedom](docs/web-thermostat-config-jeedom-fr.png)
+![Config Jeedom](docs/web-relay-config-jeedom-fr.png)
 
 ### Avancée
-![Config avancée](docs/web-thermostat-config-avancee-fr.png)
+![Config avancée](docs/web-relay-config-avancee-fr.png)
 
 ## Fichiers du système
-![Fichiers du système](docs/web-thermostat-files.jpg)
+![Fichiers du système](docs/web-relay-files.png)
 
 # Tests
 ## Tests Mqtt
