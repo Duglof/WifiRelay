@@ -125,10 +125,10 @@
 			<div class="collapse" id="panneau_relay">
 				<div class="panel-body">
 					<div class="form-row align-items-center">
-						<label for="term_mode" class="col-md-4 control-label lang-content fr">Mode de fonctionnement :</label>
-						<label for="term_mode" class="col-md-4 control-label lang-content en active">Operating mode :</label>
+						<label for="relay_mode" class="col-md-4 control-label lang-content fr">Mode de fonctionnement :</label>
+						<label for="relay_mode" class="col-md-4 control-label lang-content en active">Operating mode :</label>
 						<div class="col-md-4">
-							<select id="term_mode" name="relay_mode" class="form-control col-md-8">
+							<select id="relay_mode" name="relay_mode" class="form-control col-md-8">
 								<option class="fr" style="display: none;" value="0">⚫ ARRET</option>
 								<option class="fr" style="display: none;" value="1">🟢 MARCHE</option>
 								<option class="en" style="display: block;" value="0">⚫ STOPPED</option>
@@ -137,10 +137,10 @@
 						</div>
 					</div>
 					<div class="form-row align-items-center">
-						<label for="term_config" class="col-md-4 control-label lang-content fr">Fonctionnement :</label>
-						<label for="term_config" class="col-md-4 control-label lang-content en active">Functioning :</label>
+						<label for="relay_config" class="col-md-4 control-label lang-content fr">Fonctionnement :</label>
+						<label for="relay_config" class="col-md-4 control-label lang-content en active">Functioning :</label>
 						<div class="col-md-4">
-							<select id="term_config" name="relay_config" class="form-control col-md-8">
+							<select id="relay_config" name="relay_config" class="form-control col-md-8">
 								<option class="fr" style="display: none;" value="0">🔒 PERMANENT</option>
 								<option class="fr" style="display: none;" value="1">⏰ TIMEOUT</option>
 								<option class="en" style="display: block;" value="0">🔒 PERMANENT</option>
@@ -150,12 +150,12 @@
 					</div>
 					<div class="form-row align-items-center">
 						<div class="col-md-4">
-							<label for="term_tempmanu_heat" class="lang-content fr">Valeur du timeout (Secondes)</label>
-							<label for="term_tempmanu_heat" class="lang-content en active">Timeout value (Seconds)</label>
+							<label for="relay_timeout" class="lang-content fr">Valeur du timeout (Secondes)</label>
+							<label for="relay_timeout" class="lang-content en active">Timeout value (Seconds)</label>
 						</div>
 						<div class="col-md-4">
 							<div class="input-group">
-								<input type="number" step="1" class="form-control" id="relay_timeout" name="term_tempmanu_heat" value="180" required>
+								<input type="number" step="1" class="form-control" id="relay_timeout" name="relay_timeout" value="180" required>
 								<div class="input-group-append">
 									<span class="input-group-text lang-content fr">S</span>
 									<span class="input-group-text lang-content en active">S</span>
@@ -849,10 +849,10 @@
 		});  
 
 		$('#btn_test_relay').click(function () {
-			var term_mode = document.getElementById( 'term_mode' );
-			console.log('term_mode.id = ' + term_mode.id + ' term_mode.value = ' + term_mode.value); 
-			if (term_mode.value != 0) {
-				showAlertMessage('Le Thermostat doit être OFF', 'warning', 3000); // 3000ms = 3 seconds delay
+			var relay_mode = document.getElementById( 'relay_mode' );
+			console.log('relay_mode.id = ' + relay_mode.id + ' relay_mode.value = ' + relay_mode.value); 
+			if (relay_mode.value != 0) {
+				showAlertMessage('Le mode de WifiRelay doit être OFF', 'warning', 3000); // 3000ms = 3 seconds delay
 			} else {
 				// $.post('/test_relay');  
 				showAlertMessage('Test relais à implémenter', 'warning', 3000); // 3000ms = 3 seconds delay

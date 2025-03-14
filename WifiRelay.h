@@ -197,20 +197,16 @@ typedef struct
   extern ESP32WebServer server;
 #endif
 
-extern WiFiUDP OTA;
 extern unsigned long seconds;
-extern _sysinfo sysinfo;
-extern  Ticker  Tick_mqtt;
-extern  Ticker  Tick_jeedom;
-extern  Ticker  Tick_httpRequest;
-extern  String  optval;     // On conserve le même nom
-extern  NTP     ntp;
-extern  int16_t t_current_temp;           // Temperature en dixième de degré : 175 = 17.5°C
-extern  int16_t t_current_hum;            // Humidité de 0 à 100%
-extern  int16_t t_target_temp;
-extern  int16_t t_current_prog_item;
-extern  int8_t  t_relay_status;
-extern  int8_t  t_errors;
+extern _sysinfo   sysinfo;
+extern  Ticker    Tick_mqtt;
+extern  Ticker    Tick_jeedom;
+extern  Ticker    Tick_httpRequest;
+extern  String    optval;     // On conserve le même nom
+extern  NTP       ntp;
+extern  int8_t    r_relay_status;
+extern  int8_t    r_errors;
+extern  uint16_t  r_timeout;                  // relay timeout (decreassing each seconds)
 
 // Exported function located in main sketch
 // ===================================================
@@ -222,7 +218,7 @@ void Task_httpRequest();
 // Exported function located in webserver
 // ===================================================
 extern String tempConfigToDisplay(int16_t i_temp);
-extern String get_t_errors_str();
+extern String get_r_errors_str();
 
 #ifdef SYSLOG
 void Myprint(void);

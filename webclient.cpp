@@ -86,7 +86,7 @@ boolean jeedomPost(void)
     
     url += config.jeedom.apikey;
 
-    url.replace("%REL1%",String(t_relay_status));
+    url.replace("%REL1%",String(r_relay_status));
   
     ret = httpPost( config.jeedom.host, config.jeedom.port, (char *) url.c_str(),NULL) ;
  
@@ -114,7 +114,7 @@ boolean httpRequest(void)
 
     url = *config.httpReq.path ? config.httpReq.path : "/";
 
-    url.replace("%REL1%",String(t_relay_status));
+    url.replace("%REL1%",String(r_relay_status));
       
     ret = httpPost( config.httpReq.host, config.httpReq.port, (char *) url.c_str(), NULL) ;
   } // if host

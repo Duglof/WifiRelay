@@ -53,7 +53,7 @@
 #define CFG_HTTPREQ_PATH_SIZE    150
 #define CFG_HTTPREQ_DEFAULT_PORT 80
 #define CFG_HTTPREQ_DEFAULT_HOST "127.0.0.1"
-#define CFG_HTTPREQ_DEFAULT_PATH  "/json.htm?type=command&param=udevice&idx=1&nvalue=0&svalue=%REL1%;%TARG%;0;0;%MODE%;0"
+#define CFG_HTTPREQ_DEFAULT_PATH  "/json.htm?type=command&param=udevice&idx=1&nvalue=0&svalue=%REL1%"
 
 #define CFG_SYSLOG_HOST_SIZE    32
 
@@ -81,7 +81,7 @@
 #define CFG_FORM_ETAT_HUM               FPSTR("humidity")
 #define CFG_FORM_ETAT_PROG_ITEM         FPSTR("prog_item")
 #define CFG_FORM_ETAT_RELAY             FPSTR("relay")
-#define CFG_FORM_ERREUR_THER            FPSTR("errors")
+#define CFG_FORM_ERREUR_RELAY           FPSTR("errors")
 
 // Web Interface Configuration Form field names
 #define CFG_FORM_SSID                   FPSTR("ssid")
@@ -144,9 +144,17 @@ typedef struct
 } _mqtt;
 
 // Config du relay
-//
-//
+// ================== RELAY MODE ====================
+enum _r_mode {
+  r_mode_stopped = 0,
+  r_mode_started,
+};
 
+// ================== RELAY CONFIG ==================
+enum _r_config {
+  r_config_permanent = 0,
+  r_config_timeout,
+};
 
 // Config for relay
 // 64 Bytes
@@ -226,5 +234,6 @@ extern const char *r_config_str[];
 extern const char *r_relay_status_str[];
 extern int sizeof_r_mode_str;
 extern int sizeof_r_config_str;
+extern int sizeof_r_relay_status_str;
 
 #endif 

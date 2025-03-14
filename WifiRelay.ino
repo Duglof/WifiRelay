@@ -83,11 +83,11 @@ unsigned long seconds = 0;                // Nombre de secondes depuis la mise s
 // sysinfo data
 _sysinfo sysinfo;
 
-enum _t_errors {
-  t_error_none = 0,
-  t_error_send_mqtt       = 0x01,         // Bit 0
-  t_error_send_jeedom     = 0x02,         // Bit 1
-  t_error_send_http       = 0x04,         // Bit 2
+enum _r_errors {
+  r_error_none = 0,
+  r_error_send_mqtt       = 0x01,         // Bit 0
+  r_error_send_jeedom     = 0x02,         // Bit 1
+  r_error_send_http       = 0x04,         // Bit 2
 };
 
 /*
@@ -95,23 +95,23 @@ enum _t_errors {
  * 
  * Return Thermostat errors in human string
  */
-String get_t_errors_str()
+String get_r_errors_str()
 {
 String s;
-  if (t_errors == 0) {
+  if (r_errors == 0) {
     s += "none";
   }
-  if (t_errors & t_error_send_mqtt) {
+  if (r_errors & r_error_send_mqtt) {
     if (s.length())
       s +=",";
    s += "sendMqtt";  
   }
-  if (t_errors & t_error_send_jeedom) {
+  if (r_errors & r_error_send_jeedom) {
     if (s.length())
       s +=",";
    s += "sendJeedom";  
   }
-  if (t_errors & t_error_send_http) {
+  if (r_errors & r_error_send_http) {
     if (s.length())
       s +=",";
    s += "sendHttp";  
@@ -120,8 +120,9 @@ String s;
 }
 
 // Relay informations
-int8_t    t_relay_status = 0;             // 0 = off, 1 = on
-int8_t    t_errors = 0;                   // Erreurs : bit field : ex : bit 0 : t_error_reading_sensor (no error at startup)
+int8_t    r_relay_status = 0;             // 0 = off, 1 = on
+int8_t    r_errors = 0;                   // Erreurs : bit field : ex : bit 0 : t_error_reading_sensor (no error at startup)
+uint16_t  r_timeout = 0;                  // relay timeout (decreassing each seconds)
 
 MQTT  mqtt;
 
@@ -793,7 +794,7 @@ boolean ret = false;
         // Publish Startup
         topic= String(config.mqtt.topic);
         topic+= "/log";
-        String payload = "WifiTher Startup V";
+        String payload = "WifiRelay Startup V";
         payload += WIFIRELAY_VERSION;
         // And submit all to mqtt
         Debug("mqtt ");
@@ -954,7 +955,29 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     }
     if (!ret) {
       Debugf("mqttCallback setconfig %s : invalid\r\n", message.c_str()); 
-    }       
+    }
+
+  } else
+
+  if (mytopic.indexOf("setrelay1") >= 0) {
+    for ( i = 0 ; i < sizeof_r_relay_status_str ; i++) {
+      if (message == String(r_relay_status_str[i])) {
+        r_relay_status = i;
+        if(config.relay.mode == r_config_timeout) {
+          if (r_relay_status == 1) { 
+            r_timeout = config.relay.r_timeout;
+          } else {
+            r_timeout = 0;
+          }
+        }
+        ret = true;
+        Debugf("mqttCallback setrelay1 %s (%d)\r\n", r_relay_status_str[i], r_relay_status); 
+        break;
+      }
+    }
+    if (!ret) {
+      Debugf("mqttCallback setrelay1 %s : invalid\r\n", message.c_str()); 
+    }
   } else {
     Debugf("mqttCallback invalid topic %s : invalid\r\n", mytopic.c_str()); 
   }
@@ -1316,82 +1339,82 @@ bool     ret;
     if (config.mqtt.freq) {
       mqtt.Loop();              // Called for receive subscribe updates
     }
+
+    // gestion du timeout du relais
+    if (r_timeout && r_relay_status) {
+      r_timeout--;
+      if (r_timeout == 0) {
+        // Le timout est arrivé à échéance : mise du relay à Off (zéro)
+        r_relay_status = 0;
+      }
+    }
+    
     task_1_sec = false; 
 
   } else if (task_1_min) {
 
     // ====== update relay status ==========
-/*
-    bool relay_status = get_relais_status(new_temp,new_target, config.thermostat.hysteresis, t_relay_status);
 
-    if (t_relay_status != relay_status) {
-      t_relay_status = relay_status;
-      if (config.mqtt.freq) {
-        mqttPost(MQTT_THERMOSTAT_RELAY_1, t_relay_status_str[t_relay_status]);
-      }
-    }
-*/
-/*
-    // Update relay (si t_error_reading_sensor on n'active pas le relais )
-    if (t_relay_status && (!(t_errors & t_error_reading_sensor)))
+    // Update relay
+    if (r_relay_status)
       relay1.On();
     else
       relay1.Off();
-*/
-    Debugf("t_errors = %02x\r\n", t_errors);
-    mqttPost(MQTT_RELAY_ERRORS, get_t_errors_str().c_str());
+
+    // Debugf("r_errors = %02x\r\n", r_errors);
+    mqttPost(MQTT_RELAY_ERRORS, get_r_errors_str().c_str());
  
     // ==================================
     // Gestion clignotement LED blue
     // Blink only once ; all is ok
     // ==================================
-    if (t_errors == 0) {
+    if (r_errors == 0) {
       flash_blue_led_count = 1; 
     } else { 
-        if (t_errors & t_error_send_mqtt) {
+        if (r_errors & r_error_send_mqtt) {
           flash_blue_led_count = 3;
         } else {
-          if (t_errors & t_error_send_jeedom) {
+          if (r_errors & r_error_send_jeedom) {
             flash_blue_led_count = 4; 
           } else {
-            if (t_errors & t_error_send_http) {
+            if (r_errors & r_error_send_http) {
               flash_blue_led_count = 5;
             }
           }
         }  
     }  
 
-    Debugln("task_1_min : end");
+    // Debugln("task_1_min : end");
     task_1_min = false;
   } else if (task_mqtt) {
 
     ret = mqtt.Connect(mqttCallback, config.mqtt.host, config.mqtt.port, config.mqtt.topic, config.mqtt.user, config.mqtt.pswd,true);
     // Mqtt Publier les données; 
-    ret &= mqttPost(MQTT_RELAY_RELAY_1, r_relay_status_str[t_relay_status]);
+    ret &= mqttPost(MQTT_RELAY_RELAY_1, r_relay_status_str[r_relay_status]);
 
     if (ret) {
       // Si tout est ok
-      t_errors &= ~t_error_send_mqtt;
+      r_errors &= ~r_error_send_mqtt;
     } else {
       // Si Connect ou mqttPost a échoué ...
-      t_errors |= t_error_send_mqtt;
+      r_errors |= r_error_send_mqtt;
     }
     
     task_mqtt=false; 
   } else if (task_jeedom) { 
     ret = jeedomPost();
     if (ret) {
-      t_errors &= ~t_error_send_jeedom;
+      r_errors &= ~r_error_send_jeedom;
     } else {
-      t_errors |= t_error_send_jeedom;
+      r_errors |= r_error_send_jeedom;
     }
     task_jeedom=false;
   } else if (task_httpRequest) { 
     ret = httpRequest();
     if (ret) {
-      t_errors &= ~t_error_send_http;
+      r_errors &= ~r_error_send_http;
     } else {
-      t_errors |= t_error_send_http;
+      r_errors |= r_error_send_http;
     }
       
     task_httpRequest=false;

@@ -341,12 +341,12 @@ const char    *days_name_fr[] = {
   response+=CFG_FORM_HOST;           response+=FPSTR(FP_QCQ); response+=config.host;                              response+= FPSTR(FP_QCNL);
 
 
-  response+=CFG_FORM_ETAT_RELAY;     response+=FPSTR(FP_QCQ); response+=(t_relay_status == 1 ? "ON": "OFF" );     response+= FPSTR(FP_QCNL);
+  response+=CFG_FORM_ETAT_RELAY;     response+=FPSTR(FP_QCQ); response+=(r_relay_status == 1 ? "ON": "OFF" );     response+= FPSTR(FP_QCNL);
 
   response+=CFG_FORM_RELAY_MODE;     response+=FPSTR(FP_QCQ); response+=String(config.relay.mode);                response+= FPSTR(FP_QCNL);
   response+=CFG_FORM_RELAY_CONFIG;   response+=FPSTR(FP_QCQ); response+=String(config.relay.config);              response+= FPSTR(FP_QCNL);
 
-  response+=CFG_FORM_ERREUR_THER;    response+=FPSTR(FP_QCQ); response+=String(t_errors);                         response+= FPSTR(FP_QCNL);
+  response+=CFG_FORM_ERREUR_RELAY;   response+=FPSTR(FP_QCQ); response+=String(r_errors);                         response+= FPSTR(FP_QCNL);
 
   response+="adresse_ip";            response+=FPSTR(FP_QCQ); response+=WiFi.localIP().toString();                response+= FPSTR(FP_Q);
 
@@ -540,7 +540,7 @@ void getSysJSONData(String & response)
 
   // Thermostat errors
   response += "{\"na\":\"Thermostat errors\",\"va\":\"";
-  response += get_t_errors_str();
+  response += get_r_errors_str();
   response += "\"}\r\n";
  
   // Json end
@@ -912,23 +912,31 @@ String relayStatus;
   relay = "relay1";
   if (server.hasArg(relay.c_str())) {
     relayStatus = server.arg(relay.c_str());
-    Debugf("%s = %s\r\n" , relay.c_str(), relayStatus.c_str());
+    // Debugf("%s = %s\r\n" , relay.c_str(), relayStatus.c_str());
 
     if (relayStatus == "1" || relayStatus == "on") {
-      t_relay_status = 1;
+      Debugf("http Receive %s = %s\r\n", relay.c_str(), relayStatus.c_str());
+      r_relay_status = 1;
+      if (config.relay.mode == r_config_timeout) {
+        r_timeout = config.relay.r_timeout;
+      }
       ret = true;
     }
     if (relayStatus == "0" || relayStatus == "off") {
-      t_relay_status = 0;
+      Debugf("http Receive %s = %s\r\n", relay.c_str(), relayStatus.c_str());
+      r_relay_status = 0;
+      r_timeout = 0;
       ret = true;
     }
   
   }
-
-  if (ret)
-    server.send ( 200, "text/plain", "Ok" );  
-  else
-    server.send ( 404, "text/plain", "Argument relay1=1 or relay1=0 or relay1=on or relay1=off not found" );  
+  
+  if (ret) {
+    server.send ( 200, "text/plain", "Ok" );
+  } else {
+    Debugf("handleSetRelay : invalid request %s\r\n", server.args());
+    server.send ( 404, "text/plain", "Argument relay1=1 or relay1=0 or relay1=on or relay1=off not found" );
+  }
 }
 
 /* ======================================================================
