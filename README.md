@@ -17,6 +17,11 @@ Version en cours de construction : Non fonctionnel !!!!!!!!
   - China Standard Time : "CST-8CDT-8,M4.2.0/2,M9.2.0/3"
 - Gestion automatique de l'heure été/hiver via la Time Zone configurée
 - Paramètrage du serveur de temps (ntp)
+- Réception de requète http pour positionner le relay (replacer wifirel-23178f par le nom réseau de votre WifiRelay )
+  - ex : http://wifirel-23178f.local/setrelay?relay1=on
+  - ex : http://wifirel-23178f.local/setrelay?relay1=off
+  - ex : http://wifirel-23178f.local/setrelay?relay1=1
+  - ex : http://wifirel-23178f.local/setrelay?relay1=0 
 - Envoi possible des données vers jeedom 
 - Envoi possible des données à un serveur MQTT
 - Envoi possible d'un requète http
@@ -181,10 +186,17 @@ Sous réserve de tests
 | WIFI-RELAY/relay/errors            | Erreurs            | none/readSensor/sendMqtt <br> sendJeedom/sendHttp |
 
 #### Mqtt update command
-| Topic                              | Donnée             | Commentaire             |
-|------------------------------------|--------------------|-------------------------|
-| WIFI-RELAY/set/setrelay1           | Status             | off/on                  |
+| Topic                              | Donnée             | Commentaire             | Voir |
+|------------------------------------|--------------------|-------------------------|------|
+| WIFI-RELAY/set/setmode             | Mode               | stopped/started         | (1)  |
+| WIFI-RELAY/set/setconfig           | Config             | permanent/timeout       | (2)  |
+| WIFI-RELAY/set/setrelay1           | Status             | off/on                  | (3)  |
 
+- (1) Relay is off ; do not execute set/setrelay on
+- (2) relay is set off if timemout occur
+- (2) timeout is reseted when a new command setrelay1 on is received
+- (3) values can be also 0 or 1
+  
 ## Test Jeedom (Core V4.4.19)
 ### Configuration de votre jeedom
 
