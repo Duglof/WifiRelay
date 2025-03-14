@@ -8,7 +8,7 @@ Version en cours de construction : Non fonctionnel !!!!!!!!
   - Changement de langue automatique en fonction de la langue de votre navigateur
 - Accès avec le nom réseau e.g. http://<nom réseau>.local/
 - Données stockées dans le système de fichier LittleFS 
-- Configuration du réseau Wifi en se connectant au thermostat avec un téléphone mobile
+- Configuration du réseau Wifi en se connectant à WifiRelay avec un téléphone mobile
 - Paramétrage de la Time zone pour avoir la bonne heure : exemples
   - Paris DST : "CET-1CEST,M3.5.0,M10.5.0/3"
   - British DST : "GMT0BST,M3.5.0/01,M10.5.0/02"
@@ -26,14 +26,14 @@ Version en cours de construction : Non fonctionnel !!!!!!!!
 - Envoi possible des données à un serveur MQTT
 - Envoi possible d'un requète http
   - Données envoyées :
-    - %REL1% : Etat du relais du thermostat ( 0 = Off ; 1 = On)  
+    - %REL1% : Etat du relais ( 0 = Off ; 1 = On)
 - Mise à jour via OTA (Wifi)
   - La mise à jour de logiciel peut être effectué via wifi (sans connecter la prise usb du module esp)
   - La procédure est décrite dans mon autre projet github : LibTeleinfo
 
 ## Configuration Wifi
 Depuis votre téléphone portable :
-- Se connecter au réseau Wifi WifiRel-XXXXXX (XXXXXX aura la valeur de votre Wifirelay)
+- Se connecter au réseau Wifi WifiRel-XXXXXX (XXXXXX aura la valeur de votre WifiRelay)
 - Navigateur (chrome ou autre) url : http://192.168.4.1
 - Sélectionner l'onglet Configuration
 - Réseau Wifi : Mettre le SSID (cliquer sur la loupe pour afficher la liste des réseaux et sélectionner le votre)
@@ -161,8 +161,8 @@ Sous réserve de tests
 ### Wifi
 ![Config Wifi](docs/web-thermostat-config-wifi-fr.png)
 
-### Thermostat
-![Config Thermostat](docs/web-thermostat-config-thermostat-fr.png)
+### Relay
+![Config Relay](docs/web-thermostat-config-thermostat-fr.png)
 
 ### Mqtt
 ![Config Mqtt](docs/web-thermostat-config-mqtt-fr.png)
@@ -179,7 +179,7 @@ Sous réserve de tests
 # Tests
 ## Tests Mqtt
 #### Mqtt published values
-![Tests Mqtt](docs/WifiThermostat-mqtt-test.png)
+![Tests Mqtt](docs/WifiRelay-mqtt-test.png)
 | Topic                              | Donnée             | Commentaire             |
 |------------------------------------|--------------------|-------------------------|
 | WIFI-RELAY/relay/relay1            | Etat du relais     | on/off                  |
