@@ -17,7 +17,7 @@ Version en cours de construction : Non fonctionnel !!!!!!!!
   - China Standard Time : "CST-8CDT-8,M4.2.0/2,M9.2.0/3"
 - Gestion automatique de l'heure été/hiver via la Time Zone configurée
 - Paramètrage du serveur de temps (ntp)
-- Réception de requète http pour positionner le relay (replacer wifirel-23178f par le nom réseau de votre WifiRelay )
+- Réception de requète http pour positionner le relay (remplacer wifirel-23178f par le nom réseau de votre WifiRelay )
   - ex : http://wifirel-23178f.local/setrelay?relay1=on
   - ex : http://wifirel-23178f.local/setrelay?relay1=off
   - ex : http://wifirel-23178f.local/setrelay?relay1=1
