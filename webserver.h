@@ -37,5 +37,6 @@ void sendJSON(void);
 void wifiScanJSON(void);
 void handleFactoryReset(void);
 void handleReset(void);
+void handleSetRelay(void);
 
 #endif

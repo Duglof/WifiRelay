@@ -203,7 +203,11 @@ void handleFormConfig(void)
     // relay
     // ==========
 
-    // xxxxxxxxxxxx to be defined
+    config.relay.r_timeout = server.arg("relay_timeout").toInt();
+
+    config.relay.config = server.arg("relay_config").toInt();
+
+    config.relay.mode = server.arg("relay_mode").toInt();
 
     
     if ( saveConfig() ) {
@@ -339,9 +343,12 @@ const char    *days_name_fr[] = {
 
   response+=CFG_FORM_ETAT_RELAY;     response+=FPSTR(FP_QCQ); response+=(t_relay_status == 1 ? "ON": "OFF" );     response+= FPSTR(FP_QCNL);
 
+  response+=CFG_FORM_RELAY_MODE;     response+=FPSTR(FP_QCQ); response+=String(config.relay.mode);                response+= FPSTR(FP_QCNL);
+  response+=CFG_FORM_RELAY_CONFIG;   response+=FPSTR(FP_QCQ); response+=String(config.relay.config);              response+= FPSTR(FP_QCNL);
+
   response+=CFG_FORM_ERREUR_THER;    response+=FPSTR(FP_QCQ); response+=String(t_errors);                         response+= FPSTR(FP_QCNL);
 
-  response+="adresse_ip";            response+=FPSTR(FP_QCQ); response+=WiFi.localIP().toString();                                                    response+= FPSTR(FP_Q);
+  response+="adresse_ip";            response+=FPSTR(FP_QCQ); response+=WiFi.localIP().toString();                response+= FPSTR(FP_Q);
 
   // Json end
   response += FPSTR(FP_JSON_END);
@@ -579,15 +586,9 @@ void getConfJSONData(String & r)
   r+=CFG_FORM_NTP_HOST;               r+=FPSTR(FP_QCQ);       r+=config.ntp_server;            r+= FPSTR(FP_QCNL);
   r+=CFG_FORM_TZ;                     r+=FPSTR(FP_QCQ);       r+=config.tz;                    r+= FPSTR(FP_QCNL);
 
-/*  To be defined ...  
-  r+=CFG_FORM_THER_HYSTERESIS;        r+=FPSTR(FP_QCQ);       r+=String((float)config.thermostat.hysteresis / 10.0,1);           r+= FPSTR(FP_QCNL);
-  r+=CFG_FORM_THER_TEMP_HORSGEL;      r+=FPSTR(FP_QCQ);       r+=tempConfigToDisplay(config.thermostat.t_horsgel);               r+= FPSTR(FP_QCNL);
-  r+=CFG_FORM_THER_TEMP_MANU_HEAT;    r+=FPSTR(FP_QCQ);       r+=tempConfigToDisplay(config.thermostat.t_manu_heat);             r+= FPSTR(FP_QCNL);
-  r+=CFG_FORM_THER_TEMP_MANU_COOL;    r+=FPSTR(FP_QCQ);       r+=tempConfigToDisplay(config.thermostat.t_manu_cool);             r+= FPSTR(FP_QCNL);
-  r+=CFG_FORM_THER_CONFIG;            r+=FPSTR(FP_QCQ);       r+=config.thermostat.config;                                       r+= FPSTR(FP_QCNL);
-  r+=CFG_FORM_THER_MODE;              r+=FPSTR(FP_QCQ);       r+=config.thermostat.mode;                                         r+= FPSTR(FP_QCNL);
-*/
-
+  r+=CFG_FORM_RELAY_TIMEOUT;          r+=FPSTR(FP_QCQ);       r+=config.relay.r_timeout;       r+= FPSTR(FP_QCNL);
+  r+=CFG_FORM_RELAY_CONFIG;           r+=FPSTR(FP_QCQ);       r+=config.relay.config;          r+= FPSTR(FP_QCNL);
+  r+=CFG_FORM_RELAY_MODE;             r+=FPSTR(FP_QCQ);       r+=config.relay.mode;            r+= FPSTR(FP_QCNL);
  
   r+=CFG_FORM_MQTT_HOST;              r+=FPSTR(FP_QCQ);       r+=config.mqtt.host;      r+= FPSTR(FP_QCNL);
   r+=CFG_FORM_MQTT_PORT;              r+=FPSTR(FP_QCQ);       r+=config.mqtt.port;      r+= FPSTR(FP_QCNL);
@@ -895,6 +896,40 @@ void handleReset(void)
 
 }
 
+/* ======================================================================
+Function: handleSetRelay 
+Purpose : Set relay1 status (on or off)
+Input   : -
+Output  : - 
+Comments: -
+====================================================================== */
+void handleSetRelay(void)
+{
+bool ret = false;
+String relay;
+String relayStatus;
+
+  relay = "relay1";
+  if (server.hasArg(relay.c_str())) {
+    relayStatus = server.arg(relay.c_str());
+    Debugf("%s = %s\r\n" , relay.c_str(), relayStatus.c_str());
+
+    if (relayStatus == "1" || relayStatus == "on") {
+      t_relay_status = 1;
+      ret = true;
+    }
+    if (relayStatus == "0" || relayStatus == "off") {
+      t_relay_status = 0;
+      ret = true;
+    }
+  
+  }
+
+  if (ret)
+    server.send ( 200, "text/plain", "Ok" );  
+  else
+    server.send ( 404, "text/plain", "Argument relay1=1 or relay1=0 or relay1=on or relay1=off not found" );  
+}
 
 /* ======================================================================
 Function: handleNotFound 

@@ -37,8 +37,8 @@
 #define CFG_MQTT_DEFAULT_TOPIC  "WIFI-RELAY"
 #define CFG_MQTT_DEFAULT_PORT   1883
 
-#define MQTT_RELAY_RELAY_1      "thermostat/relay1"
-#define MQTT_RELAY_ERRORS       "thermostat/errors"
+#define MQTT_RELAY_RELAY_1      "relay/relay1"
+#define MQTT_RELAY_ERRORS       "relay/errors"
 
 #define CFG_JDOM_HOST_SIZE      32
 #define CFG_JDOM_APIKEY_SIZE    64
@@ -89,22 +89,13 @@
 #define CFG_FORM_SYSLOG_HOST            FPSTR("syslog_host")
 #define CFG_FORM_SYSLOG_PORT            FPSTR("syslog_port")
 
-#define CFG_FORM_THER_HYSTERESIS        FPSTR("term_hyteresis")
-#define CFG_FORM_THER_TEMP_HORSGEL      FPSTR("term_temphorsgel")
-#define CFG_FORM_THER_MODE              FPSTR("term_mode")
-#define CFG_FORM_THER_CONFIG            FPSTR("term_config")
-#define CFG_FORM_THER_TEMP_MANU_HEAT    FPSTR("term_tempmanu_heat")
-#define CFG_FORM_THER_TEMP_MANU_COOL    FPSTR("term_tempmanu_cool")
-#define CFG_FORM_THER_UNIT              FPSTR("therm_unit")
-#define CFG_FORM_THER_UNIT_CELSIUS      FPSTR("therm_unit_celsius")
-#define CFG_FORM_THER_UNIT_FAHRENHEIT   FPSTR("therm_unit_fahrenheit")
-#define CFG_FORM_THER_PROG_HEAT_DEFAULT FPSTR("prog_heat_default")
-#define CFG_FORM_THER_PROG_COOL_DEFAULT FPSTR("prog_cool_default")
+#define CFG_FORM_RELAY_MODE             FPSTR("relay_mode")
+#define CFG_FORM_RELAY_CONFIG           FPSTR("relay_config")
+#define CFG_FORM_RELAY_TIMEOUT          FPSTR("relay_timeout")
 
-#define CFG_THER_DEFAULT_HYSTERESIS     5
-#define CFG_THER_DEFAULT_TEMP_MANU_HEAT 175
-#define CFG_THER_DEFAULT_TEMP_MANU_COOL 220
-#define CFG_THER_DEFAULT_TEMP_HORSGEL   50
+#define CFG_RELAY_DEFAULT_TIMEOUT       180
+#define CFG_RELAY_DEFAULT_MODE          1
+#define CFG_RELAY_DEFAULT_CONFIG        1
 
 #define CFG_FORM_MQTT_HOST  FPSTR("mqtt_host")
 #define CFG_FORM_MQTT_PORT  FPSTR("mqtt_port")
@@ -151,14 +142,20 @@ typedef struct
 //
 
 
+// Config for relay
+// 64 Bytes
 typedef struct 
 {
-  uint8_t filler[64];                         // in case adding data in config avoiding loosing current conf by bad crc*/
+  uint16_t  r_timeout;                        // Durée du timeout en secondes
+  uint8_t   config;                           // config;  ARRET / MARCHE
+  uint8_t   mode;                             // mode: en : PERMANENT / TIMEOUT
+  uint8_t   options;                          // not used
+  uint8_t filler[59];                         // in case adding data in config avoiding loosing current conf by bad crc*/
 
 } _relay;
 
 // Config for jeedom
-// ??? Bytes
+// 298 Bytes
 typedef struct 
 {
   char  host[CFG_JDOM_HOST_SIZE+1];           // FQDN 
@@ -218,6 +215,10 @@ extern _Config config;
 extern bool readConfig(bool clear_on_error=true);
 extern bool saveConfig(void);
 extern void showConfig(void);
-extern const char *t_relay_status_str[];
+extern const char *r_mode_str[];
+extern const char *r_config_str[];
+extern const char *r_relay_status_str[];
+extern int sizeof_r_mode_str;
+extern int sizeof_r_config_str;
 
 #endif 

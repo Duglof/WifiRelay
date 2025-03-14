@@ -12,7 +12,7 @@
 // Téléverser WifiRelay et le data sur votre ESP12E (Sketch Data Upload)
 // Alimenter votre module ESP12E par le cable USB (ou autre) 
 // Avec votre téléphone
-//   Se connecter au réseau Wifi WifiRela-xxxxxx
+//   Se connecter au réseau Wifi WifiRel-xxxxxx
 //   Ouvrir votre navigateur préféré (Chrome ou autre)
 //   Accéder à l'url http://192.168.4.1 (la page web de WifiRelay doit apparaître)
 //   Sélectionner l'onglet 'Configuration'
@@ -120,7 +120,7 @@ String s;
 }
 
 // Relay informations
-int8_t    t_relay_status = -1;            // 0 = off, 1 = on (undefined at startup)
+int8_t    t_relay_status = 0;             // 0 = off, 1 = on
 int8_t    t_errors = 0;                   // Erreurs : bit field : ex : bit 0 : t_error_reading_sensor (no error at startup)
 
 MQTT  mqtt;
@@ -513,14 +513,14 @@ void ResetConfig(void)
   // Set default Hostname
 #ifdef ESP8266
   // ESP8266
-  sprintf_P(config.host, PSTR("WifiTher-%06X"), ESP.getChipId());
+  sprintf_P(config.host, PSTR("WifiRel-%06X"), ESP.getChipId());
 #else
   //ESP32
   int ChipId;
   uint64_t macAddress = ESP.getEfuseMac();
   uint64_t macAddressTrunc = macAddress << 40;
   ChipId = macAddressTrunc >> 40;
-  sprintf_P(config.host, PSTR("WifiTher-%06X"), ChipId);
+  sprintf_P(config.host, PSTR("WifiRel-%06X"), ChipId);
 #endif
 
   strcpy_P(config.ntp_server, CFG_DEFAULT_NTP_SERVER);
@@ -534,8 +534,10 @@ void ResetConfig(void)
   strcpy_P(config.mqtt.topic, CFG_MQTT_DEFAULT_TOPIC);
 
   // Relay
-  // xxxxxxxxxxxx to be defined
-  
+  config.relay.r_timeout = CFG_RELAY_DEFAULT_TIMEOUT;
+  config.relay.mode = CFG_RELAY_DEFAULT_MODE;
+  config.relay.config = CFG_RELAY_DEFAULT_CONFIG;
+    
   // Jeedom
   strcpy_P(config.jeedom.host, CFG_JDOM_DEFAULT_HOST);
   config.jeedom.port = CFG_JDOM_DEFAULT_PORT;
@@ -919,7 +921,43 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   Debug("], ");
   Debugln(message);
 
-  Debugf("mqttCallback invalid topic %s : invalid\r\n", mytopic.c_str()); 
+  // ========================================
+  // Update config.mode.mode via mqtt
+  // ========================================
+  if (mytopic.indexOf("setmode") >= 0) {
+    for ( i = 0 ; i < sizeof_r_mode_str ; i++) {
+      // Debugf("i = %d message = %s r_mode_str[i] = %s\r\n",i,message.c_str(), r_mode_str[i]);
+      if (message == String(r_mode_str[i])) {
+        config.relay.mode = i;
+        ret = true;
+        Debugf("mqttCallback setmode %s (%d)\r\n", r_mode_str[i], config.relay.mode); 
+        break;
+      }
+    }
+    if (!ret) {
+      Debugf("mqttCallback setmode %s : invalid\r\n", message.c_str()); 
+    }       
+  } else
+
+  // ========================================
+  // Update config.relay.config via mqtt
+  // ========================================
+  if (mytopic.indexOf("setconfig") >= 0) {
+    for ( i = 0 ; i < sizeof_r_config_str ; i++) {
+      // Debugf("i = %d message = %s r_config_str[i] = %s\r\n",i,message.c_str(), r_config_str[i]);
+      if (message == String(r_config_str[i])) {
+        config.relay.config = i;
+        ret = true;
+        Debugf("mqttCallback setconfig %s (%d)\r\n", r_config_str[i], config.relay.config); 
+        break;
+      }
+    }
+    if (!ret) {
+      Debugf("mqttCallback setconfig %s : invalid\r\n", message.c_str()); 
+    }       
+  } else {
+    Debugf("mqttCallback invalid topic %s : invalid\r\n", mytopic.c_str()); 
+  }
 
   if(ret) {
     // Save new config in LittleFS file system
@@ -1134,6 +1172,7 @@ void setup()
   server.on("/wifiscan.json", wifiScanJSON);
   server.on("/factory_reset", handleFactoryReset);
   server.on("/reset", handleReset);
+  server.on("/setrelay", handleSetRelay);
 
   // handler for the hearbeat
   server.on("/hb.htm", HTTP_GET, [&](){
@@ -1328,7 +1367,7 @@ bool     ret;
 
     ret = mqtt.Connect(mqttCallback, config.mqtt.host, config.mqtt.port, config.mqtt.topic, config.mqtt.user, config.mqtt.pswd,true);
     // Mqtt Publier les données; 
-    ret &= mqttPost(MQTT_RELAY_RELAY_1, t_relay_status_str[t_relay_status]);
+    ret &= mqttPost(MQTT_RELAY_RELAY_1, r_relay_status_str[t_relay_status]);
 
     if (ret) {
       // Si tout est ok

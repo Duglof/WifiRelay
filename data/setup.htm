@@ -117,53 +117,22 @@
 
 		<div class="container mt-5">
 			<p>
-				<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#panneau_thermostat" aria-expanded="false" aria-controls="panneau">Thermostat »</button>
+				<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#panneau_relay" aria-expanded="false" aria-controls="panneau">
+					<span class="lang-content fr">Relais »</span>
+					<span class="lang-content en active">Relays »</span>
+                </button>
 			</p>
-			<div class="collapse" id="panneau_thermostat">
+			<div class="collapse" id="panneau_relay">
 				<div class="panel-body">
-					<div class="form-row align-items-center">
-						<div class="col-md-4">
-							<label for="term_hyteresis" class="control-label lang-content fr">Hystérésis :</label>
-							<label for="term_hyteresis" class="control-label lang-content en active">Hysteresis :</label>
-						</div>
-						<div class="col-md-4">
-							<div class="input-group">
-								<input type="number" step="0.1" min="0.1" max="2" class="form-control" id="term_hyteresis" name="term_hyteresis" value="0.5" required>
-								<div class="input-group-append">
-									<span class="input-group-text temp-unit celsius active">°C</span>
-									<span class="input-group-text temp-unit fahrenheit">°F</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="form-row align-items-center">
-						<div class="col-md-4">
-							<label for="term_temphorsgel" class="control-label lang-content fr">Température HorsGel :</label>
-							<label for="term_temphorsgel" class="control-label lang-content en active">Frost Protection Temperature :</label>
-						</div>
-						<div class="col-md-4">
-							<div class="input-group">
-								<input type="number" step="0.1" class="form-control" id="term_temphorsgel" name="term_temphorsgel" value="5.0" required>
-								<div class="input-group-append">
-									<span class="input-group-text temp-unit celsius active">°C</span>
-									<span class="input-group-text temp-unit fahrenheit">°F</span>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="form-row align-items-center">
 						<label for="term_mode" class="col-md-4 control-label lang-content fr">Mode de fonctionnement :</label>
 						<label for="term_mode" class="col-md-4 control-label lang-content en active">Operating mode :</label>
 						<div class="col-md-4">
-							<select id="term_mode" name="term_mode" class="form-control col-md-8">
-								<option class="fr" style="display: none;" value="0">⚫ OFF</option>
-								<option class="fr" style="display: none;" value="1">🟢 HORSGEL</option>
-								<option class="fr" style="display: none;" value="2">🔴 CHAUFFAGE</option>
-								<option class="fr" style="display: none;" value="3">🔵 CLIMATISATION</option>
-								<option class="en" style="display: block;" value="0">⚫ OFF</option>
-								<option class="en" style="display: block;" value="1">🟢 ANTIFROST</option>
-								<option class="en" style="display: block;" value="2">🔴 HEAT</option>
-								<option class="en" style="display: block;" value="3">🔵 COOL</option>    
+							<select id="term_mode" name="relay_mode" class="form-control col-md-8">
+								<option class="fr" style="display: none;" value="0">⚫ ARRET</option>
+								<option class="fr" style="display: none;" value="1">🟢 MARCHE</option>
+								<option class="en" style="display: block;" value="0">⚫ STOPPED</option>
+								<option class="en" style="display: block;" value="1">🟢 STARTED</option>
 							</select>
 						</div>
 					</div>
@@ -171,49 +140,27 @@
 						<label for="term_config" class="col-md-4 control-label lang-content fr">Fonctionnement :</label>
 						<label for="term_config" class="col-md-4 control-label lang-content en active">Functioning :</label>
 						<div class="col-md-4">
-							<select id="term_config" name="term_config" class="form-control col-md-8">
-								<option class="fr" style="display: none;" value="0">🔒 MANUEL</option>
-								<option class="fr" style="display: none;" value="1">⏰ PROGRAMME</option>
-								<option class="en" style="display: block;" value="0">🔒 MANUAL</option>
-								<option class="en" style="display: block;" value="1">⏰ PROGRAM</option>
+							<select id="term_config" name="relay_config" class="form-control col-md-8">
+								<option class="fr" style="display: none;" value="0">🔒 PERMANENT</option>
+								<option class="fr" style="display: none;" value="1">⏰ TIMEOUT</option>
+								<option class="en" style="display: block;" value="0">🔒 PERMANENT</option>
+								<option class="en" style="display: block;" value="1">⏰ TIMEOUT</option>
 							</select>
 						</div>
 					</div>
 					<div class="form-row align-items-center">
 						<div class="col-md-4">
-							<label for="term_tempmanu_heat" class="lang-content fr">Consigne de chauffage en mode manuel</label>
-							<label for="term_tempmanu_heat" class="lang-content en active">Heating setpoint in manual mode</label>
+							<label for="term_tempmanu_heat" class="lang-content fr">Valeur du timeout (Secondes)</label>
+							<label for="term_tempmanu_heat" class="lang-content en active">Timeout value (Seconds)</label>
 						</div>
 						<div class="col-md-4">
 							<div class="input-group">
-								<input type="number" step="0.1" class="form-control" id="term_tempmanu_heat" name="term_tempmanu_heat" value="17.0" required>
+								<input type="number" step="1" class="form-control" id="relay_timeout" name="term_tempmanu_heat" value="180" required>
 								<div class="input-group-append">
-									<span class="input-group-text temp-unit celsius active">°C</span>
-									<span class="input-group-text temp-unit fahrenheit">°F</span>
+									<span class="input-group-text lang-content fr">S</span>
+									<span class="input-group-text lang-content en active">S</span>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="form-row align-items-center">
-						<div class="col-md-4">
-							<label for="term_tempmanu_cool" class="lang-content fr">Consigne de climatisation en mode manuel</label>
-							<label for="term_tempmanu_cool" class="lang-content en active">Cooling setpoint in manual mode</label>
-						</div>
-						<div class="col-md-4">
-							<div class="input-group">
-								<input type="number" step="0.1" class="form-control" id="term_tempmanu_cool" name="term_tempmanu_cool" value="22.0" required>
-								<div class="input-group-append">
-									<span class="input-group-text temp-unit celsius active">°C</span>
-									<span class="input-group-text temp-unit fahrenheit">°F</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="form-row align-items-center">
-						<label class="col-md-4">Affichage degrés</label>
-						<div class="col-md-4">
-							<label class="radio-inline"><input type="radio" id="therm_unit_celsius"    name="therm_unit" value="0">Celsius (°C)</label>
-							<label class="radio-inline"><input type="radio" id="therm_unit_fahrenheit" name="therm_unit" value="1">Fahrenheit (°F)</label>
 						</div>
 					</div>
 				</div>
@@ -551,8 +498,8 @@
 					<div class="text-center">
 						<div class="btn-group">
 							<button type="button" class="btn btn-danger" id="btn_reboot">
-								<span class="lang-content fr">Redémarrer WifiThermostat</span>
-								<span class="lang-content en active">Restart WifiThermostat</span>
+								<span class="lang-content fr">Redémarrer WifiRelais</span>
+								<span class="lang-content en active">Restart WifiRelay</span>
 							</button>
 						</div>
 						<div class="btn-group">
@@ -586,7 +533,7 @@
 				</div>
 				<div class="modal-body">
 					<span class="lang-content fr">
-						<p>Vous allez effectuer un remise à zéro du module WifiThermostat</p>
+						<p>Vous allez effectuer un remise à zéro du module WifiRelais</p>
 						<p>Cette procédure est irreversible et vous allez effacer tous les paramètres de configuration</p>
 						<p>Vous allez supprimer les paramètres de connexion à votre réseau Wifi</p>
 						<p></p>
@@ -594,7 +541,7 @@
 						<p></p>
 					</span>
 					<span class="lang-content en active">
-						<p>You are going to reset the WifiThermostat module</p>
+						<p>You are going to reset the WifiRelay module</p>
 						<p>This procedure is irreversible and you will erase all configuration settings</p>
 						<p>You will delete the connection settings to your Wifi network</p>
 						<p></p>
@@ -656,8 +603,8 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title lang-content fr">Redémarrage WifiThermostat en cours</h4>
-					<h4 class="modal-title lang-content en active">WifiThermostat restart in progress</h4>
+					<h4 class="modal-title lang-content fr">Redémarrage WifiRelais en cours</h4>
+					<h4 class="modal-title lang-content en active">WifiRelay restart in progress</h4>
 				</div>
 				<div class="modal-body">
 					<p class="text-center" id="txt_srv"></p>
@@ -737,25 +684,6 @@
 			});
 		}
 		
-		// Show the html element 
-		// according to the temperature unit
-		// and hide the other
-		//
-		// class name : 'temp-unit celsius' for celsius
-		//              'temp-unit fahrenheit' for fahrenheit
-		//     
-		// unit : 'celsius' or 'fahrenheit'
-		function showContentUnit(unit) {
-			var contents = document.getElementsByClassName('temp-unit');
-			for (var i = 0; i < contents.length; i++) {
-				contents[i].classList.remove('active');
-			}
-			var langContents = document.getElementsByClassName(unit);
-			for (var i = 0; i < langContents.length; i++) {
-				langContents[i].classList.add('active');
-			}
-		}
-
 		// type : success, warning, danger
 		function showAlertMessage(message, type, delay) {
 			document.getElementById('alert-message').innerHTML = message;
@@ -883,10 +811,6 @@
 					}
 				}
 			}
-
-			therm_unit = json_data["therm_unit"];
-			console.log('therm_unit = ' + therm_unit)
-			showContentUnit(json_data["therm_unit"])
 
 			console.log("  frm_config filled with json data");
 

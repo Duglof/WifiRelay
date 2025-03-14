@@ -15,14 +15,29 @@
 // Config values
 _Config config;
 
+// ================== RELAY MODE ====================
+const char *r_mode_str[] = {
+  "stopped",
+  "started",
+};
+
+int sizeof_r_mode_str = sizeof(r_mode_str) / sizeof(r_mode_str[0]);
+
+// ================== THERMOSTAT CONFIG ==================
+const char *r_config_str[] = {
+    "permanent",
+    "timeout",
+};
+
+int sizeof_r_config_str = sizeof(r_config_str) / sizeof(r_config_str[0]);
 
 // ================= THERMOSTAT RELAY STATUS ==================
-const char *t_relay_status_str[] = {
+const char *r_relay_status_str[] = {
     "off",
     "on",
 };
 
-int sizeof_t_relay_status_str = sizeof(t_relay_status_str) / sizeof(t_relay_status_str[0]);
+int sizeof_r_relay_status_str = sizeof(r_relay_status_str) / sizeof(r_relay_status_str[0]);
 
 
 uint16_t crc16Update(uint16_t crc, uint8_t a)
@@ -187,7 +202,9 @@ void showConfig()
   DebugF("syslog port :"); Debugln(config.syslog_port); 
 
   DebuglnF("===== relay"); 
-  DebugF("relay     :"); Debugln("nothing"); 
+  DebugF("config     :"); Debugln(config.relay.config);
+  DebugF("mode       :"); Debugln(config.relay.mode);
+  DebugF("timeout    : "); Debugln(config.relay.r_timeout);
 
   DebuglnF("===== Mqtt");
   DebugF("host     :"); Debugln(config.mqtt.host);
