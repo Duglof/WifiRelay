@@ -7,6 +7,7 @@ Version en cours de construction : Non fonctionnel !!!!!!!!
 - Serveur Web pour la configuration et le suivi (multilangue français anglais)
   - Changement de langue automatique en fonction de la langue de votre navigateur
 - Accès avec le nom réseau e.g. http://<nom réseau>.local/
+  - ex : wifirel-23178f.local (à entrer dans la bare d'adresse de votre navigateur) 
 - Données stockées dans le système de fichier LittleFS 
 - Configuration du réseau Wifi en se connectant à WifiRelay avec un téléphone mobile
 - Paramétrage de la Time zone pour avoir la bonne heure : exemples
