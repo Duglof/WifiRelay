@@ -407,7 +407,7 @@ void getSysJSONData(String & response)
 
   response += "{\"na\":\"WifiRelay Version\",\"va\":\"" WIFIRELAY_VERSION "\"},\r\n";
 
-  response += "{\"na\":\"Sortie relai\",\"va\":\"";
+  response += "{\"na\":\"Sortie relais\",\"va\":\"";
 
   response += "GPIO ";
   response += String(CFG_RELAY_GPIO);
@@ -426,24 +426,6 @@ void getSysJSONData(String & response)
   response += "{\"na\":\"Options de compilation\",\"va\":\"";
   response += optval;
   response += "\"},\r\n";
-
-#if defined(THER_BME280) || defined(THER_HTU21)
-  response += "{\"na\":\"Sensor SDA, SCL \",\"va\":\"";
-  response += "GPIO " + String(SDA) + ", GPIO " + String(SCL);
-  response += "\"},\r\n";
-#elif defined(THER_DS18B20)
-
-  response += "{\"na\":\"Sensor Data \",\"va\":\"";
-  
-  #ifdef ESP8266
-    OneWire oneWire(4);   // GPIO 4
-    response += "GPIO 4";
-  #else
-    response += "GPIO 33";
-  #endif
-  
-  response += "\"},\r\n";
-#endif
 
   response += "{\"na\":\"SDK Version\",\"va\":\"";
 #ifdef ESP8266
@@ -538,8 +520,8 @@ void getSysJSONData(String & response)
 #endif
   response += "\"},\r\n";
 
-  // Thermostat errors
-  response += "{\"na\":\"Thermostat errors\",\"va\":\"";
+  // WifiRelay errors
+  response += "{\"na\":\"WifiRelay errors\",\"va\":\"";
   response += get_r_errors_str();
   response += "\"}\r\n";
  

@@ -611,6 +611,25 @@ int WifiHandleConn(boolean setup = false)
     // Pourquoi ce n'était pas appelé avant V1.0.9 et précédente
     WiFi.mode(WIFI_STA);
 
+    // Without WiFi.hostname(config.host);
+    //   ping WifiRel-23178F
+    //     ne fonctionne pas
+    //   ping ESP-23178F
+    //     ne fonctionne pas
+    //   ping WifiRel-23178F.local
+    //     PING WifiRel-23178F.local (192.168.1.28) 56(84) bytes of data.
+    //     64 bytes from ESP-23178F (192.168.1.28): icmp_seq=1 ttl=255 time=2.29 ms
+    // With WiFi.hostname(config.host);
+    //  ping WifiRel-23178F
+    //    ok idem ci-dessous
+    //  ping WifiRel-23178F.local
+    //    PING WifiRel-23178F.local (192.168.1.28) 56(84) bytes of data.
+    //    64 bytes from WifiRel-23178F (192.168.1.28): icmp_seq=1 ttl=255 time=2.28 ms
+
+    if(*config.host) {
+      WiFi.hostname(config.host);
+    }
+    
     DebuglnF("========== WiFi.printDiag Start"); 
     WiFi.printDiag(DEBUG_SERIAL);
     DebuglnF("========== WiFi.printDiag End"); 
@@ -678,7 +697,6 @@ int WifiHandleConn(boolean setup = false)
         --timeout;
       }
     }
-
 
     // connected ? disable AP, client mode only
     if (ret == WL_CONNECTED)
@@ -1155,14 +1173,6 @@ void setup()
   // start Wifi connect or soft AP
   WifiHandleConn(true);
 
-  // start mDNS
-  // Start mDNS at esp8266.local address
-  if (!MDNS.begin(config.host)) {             
-    Debugln("Error starting mDNS");
-  } else {
-    Debugf("mDNS started %s.local", config.host);
-  }
-  
 #ifdef SYSLOG
   //purge previous debug message,
   if(SYSLOGselected) {
