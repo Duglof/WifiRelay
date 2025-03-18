@@ -608,27 +608,28 @@ int WifiHandleConn(boolean setup = false)
   int ret = WiFi.status();
 
   if (setup) {
+    #ifdef ESP32
+      // ESP32 Doc espressif : https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
+      // The setHostname() function must be called BEFORE Wi-Fi is started with WiFi.begin(), WiFi.softAP(), WiFi.mode(), or WiFi.run() 
+      if(*config.host) {
+        WiFi.setHostname(config.host);
+      }
+    #endif
+    
     // Pourquoi ce n'était pas appelé avant V1.0.9 et précédente
     WiFi.mode(WIFI_STA);
 
-    // Without WiFi.hostname(config.host);
-    //   ping WifiRel-23178F
-    //     ne fonctionne pas
-    //   ping ESP-23178F
-    //     ne fonctionne pas
-    //   ping WifiRel-23178F.local
-    //     PING WifiRel-23178F.local (192.168.1.28) 56(84) bytes of data.
-    //     64 bytes from ESP-23178F (192.168.1.28): icmp_seq=1 ttl=255 time=2.29 ms
-    // With WiFi.hostname(config.host);
-    //  ping WifiRel-23178F
-    //    ok idem ci-dessous
-    //  ping WifiRel-23178F.local
-    //    PING WifiRel-23178F.local (192.168.1.28) 56(84) bytes of data.
-    //    64 bytes from WifiRel-23178F (192.168.1.28): icmp_seq=1 ttl=255 time=2.28 ms
-
-    if(*config.host) {
-      WiFi.hostname(config.host);
-    }
+    #ifdef ESP8266
+      // With WiFi.hostname(config.host);
+      //  ping WifiRel-23178F
+      //    ok idem ci-dessous
+      //  ping WifiRel-23178F.local
+      //    PING WifiRel-23178F.local (192.168.1.28) 56(84) bytes of data.
+      //    64 bytes from WifiRel-23178F (192.168.1.28): icmp_seq=1 ttl=255 time=2.28 ms
+      if(*config.host) {
+        WiFi.hostname(config.host);
+      }
+    #endif
     
     DebuglnF("========== WiFi.printDiag Start"); 
     WiFi.printDiag(DEBUG_SERIAL);
