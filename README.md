@@ -1,8 +1,21 @@
 # WifiRelay : Remote relay for WifiThermostat
 WifiRelay for ESP8266 or ESP32
 
-Version en cours de construction : Non fonctionnel !!!!!!!!
+Version testée en mode bistable et en mode monostable
 
+## Modes de fonctionnement
+- A la mise sous tension le relais est off (l'état du relais n'est pas sauvegardé)
+- L'état du relais peut être fixé par une requète http ou mqtt
+### Mode Bistable
+- Le relais conserve sont état indéfiniment. La réception d'une nouvelle requète http ou mqtt permet de changer sont état
+### Mode Monostable
+- A chaque requète On, le relais passe à on est le timeout est positionné à sa valeur configurée (voir Configuration)
+- Lorsque le timeout arrive à échéance, l'état du relais passe à Off automatiquement
+- Une nouvelle requète à on réarme le timeout en le mettant à sa valeur de configuration
+- C'est le fonctionnement d'une minuterie
+- Cela évite que le chauffage reste activé en cas de perte de réseau
+- En fonctionnement normal, le thermostat envoyant l'état de son relay toutes les minutes (à configurer sur le thermostat), le WifiRelay restera à On
+- Une requète Off met le relay off et arrête le timeout.
 ## Fonctionnalités
 - Serveur Web pour la configuration et le suivi (multilangue français anglais)
   - Changement de langue automatique en fonction de la langue de votre navigateur
