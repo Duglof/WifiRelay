@@ -56,7 +56,7 @@ Depuis votre téléphone portable :
 - Déployer Avancée
 - Cliquer sur Redémarrer Wifirelay
 - Wifirelay se connectera à votre réseau Wifi
-- Accéder à votre box pour connaître sa nouvelle adresse IP ou utiliser WifiRelr-XXXXXX.local (remplacer XXXXXX par votre valeur)
+- Accéder à votre box pour connaître sa nouvelle adresse IP ou utiliser WifiRel-XXXXXX.local (remplacer XXXXXX par votre valeur)
 
 
 # Hardware
