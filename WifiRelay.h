@@ -71,7 +71,7 @@ extern "C" {
 //  vers un serveur rsyslog du réseau
 //=====================================================
 
-#define SYSLOG
+// #define SYSLOG
 
 
 //==========  RELAY PIN ============

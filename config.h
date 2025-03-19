@@ -81,6 +81,7 @@
 #define CFG_FORM_ETAT_HUM               FPSTR("humidity")
 #define CFG_FORM_ETAT_PROG_ITEM         FPSTR("prog_item")
 #define CFG_FORM_ETAT_RELAY             FPSTR("relay")
+#define CFG_FORM_ETAT_TIMEOUT           FPSTR("timeout")
 #define CFG_FORM_ERREUR_RELAY           FPSTR("errors")
 
 // Web Interface Configuration Form field names

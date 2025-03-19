@@ -348,6 +348,8 @@ const char    *days_name_fr[] = {
 
   response+=CFG_FORM_ERREUR_RELAY;   response+=FPSTR(FP_QCQ); response+=String(r_errors);                         response+= FPSTR(FP_QCNL);
 
+  response+=CFG_FORM_ETAT_TIMEOUT;   response+=FPSTR(FP_QCQ); response+=String(r_timeout);                        response+= FPSTR(FP_QCNL);
+
   response+="adresse_ip";            response+=FPSTR(FP_QCQ); response+=WiFi.localIP().toString();                response+= FPSTR(FP_Q);
 
   // Json end
